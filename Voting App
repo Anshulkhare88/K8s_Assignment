@@ -1,0 +1,109 @@
+-rw-r--r-- 1 root root 401 Nov 10 11:36 db-deployment.yaml
+-rw-r--r-- 1 root root 146 Nov 10 11:36 db-service.yaml
+-rw-r--r-- 1 root root 402 Nov 10 11:36 redis-deployment.yaml
+-rw-r--r-- 1 root root 152 Nov 10 11:36 redis-service.yaml
+-rw-r--r-- 1 root root 299 Nov 10 11:36 result-deployment.yaml
+-rw-r--r-- 1 root root 195 Nov 10 11:36 result-service.yaml
+-rw-r--r-- 1 root root 289 Nov 10 11:36 vote-deployment.yaml
+-rw-r--r-- 1 root root 192 Nov 10 11:36 vote-service.yaml
+-rw-r--r-- 1 root root 292 Nov 10 11:36 worker-deployment.yaml
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-qvprv        1/1     Running   0          19h
+redis-868d64d78-mgwt7     1/1     Running   0          19h
+result-5d57b59f4b-t4qs5   1/1     Running   0          19h
+vote-94849dc97-p8rzj      1/1     Running   0          19h
+worker-dd46d7584-t8ctl    1/1     Running   0          19h
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+db           ClusterIP   10.108.158.12   <none>        5432/TCP         19h
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          19h
+redis        ClusterIP   10.97.177.200   <none>        6379/TCP         19h
+result       NodePort    10.103.32.74    <none>        5001:31001/TCP   19h
+vote         NodePort    10.109.174.15   <none>        5000:31000/TCP   19h
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-qvprv        1/1     Running   0          19h
+redis-868d64d78-mgwt7     1/1     Running   0          19h
+result-5d57b59f4b-t4qs5   1/1     Running   0          19h
+vote-94849dc97-p8rzj      1/1     Running   0          19h
+worker-dd46d7584-t8ctl    1/1     Running   0          19h
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]# kubectl delete po vote-94849dc97-p8rzj
+pod "vote-94849dc97-p8rzj" deleted
+^C
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-qvprv        1/1     Running   0          19h
+redis-868d64d78-mgwt7     1/1     Running   0          19h
+result-5d57b59f4b-t4qs5   1/1     Running   0          19h
+vote-94849dc97-8qswk      1/1     Running   0          43s
+worker-dd46d7584-t8ctl    1/1     Running   0          19h
+[root@ip-172-31-13-13 k8s-specifications]#
+
+
+
+
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-qvprv        1/1     Running   0          19h
+redis-868d64d78-mgwt7     1/1     Running   0          19h
+result-5d57b59f4b-t4qs5   1/1     Running   0          19h
+vote-94849dc97-8qswk      1/1     Running   0          5m29s
+worker-dd46d7584-t8ctl    1/1     Running   0          19h
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]# kubectl delete po worker-dd46d7584-t8ctl
+pod "worker-dd46d7584-t8ctl" deleted
+^C
+[root@ip-172-31-13-13 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-qvprv        1/1     Running   0          19h
+redis-868d64d78-mgwt7     1/1     Running   0          19h
+result-5d57b59f4b-t4qs5   1/1     Running   0          19h
+vote-94849dc97-8qswk      1/1     Running   0          6m19s
+worker-dd46d7584-xjrwq    1/1     Running   0          39s
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]#
+[root@ip-172-31-13-13 k8s-specifications]# cat worker-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_worker
+        name: worker
+[root@ip-172-31-13-13 k8s-specifications]#
+
+
+
+##### After Deletion of Voting App and worker pod, app is working countinously, as we delete the pod, new pod spown and by this new pod voting app is working. 
